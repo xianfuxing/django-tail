@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+tail -F /var/log/nginx/access.log
+{% endblock title %}
+{% block content %}
+{% endblock content%}
+
+{% block script %}
+  <script>
+    var _newLinesCount = 0;
+    var _isWindowFocused = true;
+
+    window.addEventListener('blur', function() {
+        _isWindowFocused = false;
+    }, true);
+    window.addEventListener('focus', function() {
+        _isWindowFocused = true;
+        _newLinesCount = 0;
+        Tinycon.setBubble(0);
+    }, true);
+
+    var _isScrolledBottom = function() {
+        var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+        var totalHeight = document.body.offsetHeight;
+        var clientHeight = document.documentElement.clientHeight;
+        return totalHeight <= currentScroll + clientHeight;
+      };
+
+    var socket = new WebSocket('ws://' + window.location.host + '/logs/');
+
+    socket.onopen = function open() {
+      console.log('WebSockets connection created.');
+    };
+
+    socket.onmessage = function message(event) {
+      var data = JSON.parse(event.data);
+      // NOTE: We escape JavaScript to prevent XSS attacks.
+      var line = data['line'];
+      // $(".log").prepend('<div class="line">'+line+'</div>').fadeIn();
+      if (line != '') {
+          $(".log").append('<div class="line">'+'<p class="inner-line">'+line+'</p>'+'</div>').fadeIn();
+      }
+      // console.log(_isWindowFocused);
+      if (_newLinesCount < 99 && ! _isWindowFocused) {
+          _newLinesCount += 1;
+          Tinycon.setBubble(_newLinesCount);
+      }
+
+      var wasScrolledBottom = _isScrolledBottom();
+      console.log(wasScrolledBottom);
+      if (! wasScrolledBottom) {
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+    };
+
+    if (socket.readyState == WebSocket.OPEN) {
+      socket.onopen();
+    }
+  </script>
+{% endblock script %}

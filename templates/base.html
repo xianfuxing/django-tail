@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/fontawesome/4.4.0/css/font-awesome.min.css"> 
+    <link rel="icon" href="/static/images/favicon.ico">
+</head>
+<body>
+    <header class="navbar-static-top bs-docs-nav" id="top" role="banner">
+        <nav class="topbar navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-fluid">
+                <span class="navbar-brand" href="#">tail -F /var/log/nginx/access.log</span>
+                <span class="user navbar-right">
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url "logout" %}"><i class="fa fa-sign-out" aria-hidden="true"></i> 登出</a>
+                    {% else %}
+                        <a href="{% url "login" %}"><i class="fa fa-sign-in" aria-hidden="true"></i> 登录</a>
+                    {% endif %}
+                </span>
+                <form class="navbar-form navbar-right" role="search" onkeypress="return event.keyCode != 13;">
+                    <div class="form-group">
+                        <input type="text" class="form-control query" placeholder="Filter" tabindex="1">
+                    </div>
+                </form>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+    {% block content %}
+    {% endblock content %}
+    </div>
+    <pre class="log"></pre>
+
+    <script src="//cdn.bootcss.com/tinycon/0.6.5/tinycon.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    {% block script %}
+    {% endblock script %}
+</body>
+</html>
+

@@ -1,0 +1,50 @@
+body {
+    padding-top: 4em;
+}
+
+.no-topbar {
+    padding-top: 10px;
+}
+
+.navbar-inverse .navbar-brand {
+    color: white;
+}
+
+.log {
+    white-space: pre-wrap;
+    color: black;
+    font-size: .85em;
+    background: inherit;
+    border: 0;
+    padding: 0;
+}
+
+.log .inner-line {
+    padding: 0 15px;
+    margin-left: 84pt;
+    text-indent: -84pt;
+    margin-bottom: 0;
+}
+
+.log .inner-line:empty::after {
+    content: '.';
+    visibility: hidden;
+}
+
+.log.no-indent .inner-line {
+    margin-left: 0;
+    text-indent: 0;
+}
+
+.log .line-selected {
+    background-color: #ffb2b0;
+}
+
+.user a {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: #999;
+    margin-top: 15px;
+    margin-right: 25px;
+    display: inline-block;
+}
