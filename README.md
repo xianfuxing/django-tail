@@ -18,3 +18,6 @@ django-tail
 <pre>
 <code>python manage.py runserver</code>
 </pre>
+
+## To be continue...
+增加search功能，待续...
