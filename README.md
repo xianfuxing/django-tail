@@ -5,5 +5,7 @@ django-tail
 # screenshot
 
 # Installation
-<pre><code>pip install django==1.10</code></pre>
-<pre><code>pip install channels==1.1.3</code></pre>
+<pre>
+<code>pip install django==1.10</code>
+<code>pip install channels==1.1.3</code>
+</pre>
