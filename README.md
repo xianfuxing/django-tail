@@ -1,10 +1,11 @@
 django-tail
 ===========
+
 利用django + channels 实现Liux tail -f 功能
 
-# screenshot
+## screenshot
 
-# Installation
+## Installation
 <pre>
 <code>pip install django==1.10</code>
 <code>pip install channels==1.1.3</code>
@@ -13,8 +14,7 @@ django-tail
 <code>python manage.py createsuperuser</code>
 </pre>
 
-# 运行
+## 运行
 <pre>
 <code>python manage.py runserver</code>
 </pre>
-go to: http://yourhostname:80000
