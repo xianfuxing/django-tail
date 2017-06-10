@@ -24,6 +24,9 @@ tail -F /var/log/nginx/access.log
         var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
         var totalHeight = document.body.offsetHeight;
         var clientHeight = document.documentElement.clientHeight;
+        console.log(currentScroll);
+        console.log(clientHeight);
+        console.log(totalHeight);
         return totalHeight <= currentScroll + clientHeight;
       };
 
@@ -38,6 +41,7 @@ tail -F /var/log/nginx/access.log
       // NOTE: We escape JavaScript to prevent XSS attacks.
       var line = data['line'];
       // $(".log").prepend('<div class="line">'+line+'</div>').fadeIn();
+      var wasScrolledBottom = _isScrolledBottom();
       if (line != '') {
           $(".log").append('<div class="line">'+'<p class="inner-line">'+line+'</p>'+'</div>').fadeIn();
       }
@@ -47,9 +51,8 @@ tail -F /var/log/nginx/access.log
           Tinycon.setBubble(_newLinesCount);
       }
 
-      var wasScrolledBottom = _isScrolledBottom();
       console.log(wasScrolledBottom);
-      if (! wasScrolledBottom) {
+      if (wasScrolledBottom) {
         window.scrollTo(0, document.body.scrollHeight);
       }
     };
