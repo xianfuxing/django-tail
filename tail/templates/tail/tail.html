@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load staticfiles %}
 
 {% block title %}
 tail -F /var/log/nginx/access.log
@@ -24,9 +25,6 @@ tail -F /var/log/nginx/access.log
         var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
         var totalHeight = document.body.offsetHeight;
         var clientHeight = document.documentElement.clientHeight;
-        console.log(currentScroll);
-        console.log(clientHeight);
-        console.log(totalHeight);
         return totalHeight <= currentScroll + clientHeight;
       };
 
@@ -38,20 +36,20 @@ tail -F /var/log/nginx/access.log
 
     socket.onmessage = function message(event) {
       var data = JSON.parse(event.data);
-      // NOTE: We escape JavaScript to prevent XSS attacks.
       var line = data['line'];
-      // $(".log").prepend('<div class="line">'+line+'</div>').fadeIn();
       var wasScrolledBottom = _isScrolledBottom();
       if (line != '') {
           $(".log").append('<div class="line">'+'<p class="inner-line">'+line+'</p>'+'</div>').fadeIn();
       }
-      // console.log(_isWindowFocused);
+      // Search 
+      self.logChildNodes = document.getElementById("log").childNodes;
+
+      // unread
       if (_newLinesCount < 99 && ! _isWindowFocused) {
           _newLinesCount += 1;
           Tinycon.setBubble(_newLinesCount);
       }
 
-      console.log(wasScrolledBottom);
       if (wasScrolledBottom) {
         window.scrollTo(0, document.body.scrollHeight);
       }
@@ -60,5 +58,7 @@ tail -F /var/log/nginx/access.log
     if (socket.readyState == WebSocket.OPEN) {
       socket.onopen();
     }
+
   </script>
+  <script src="{% static 'tail/js/search.js' %}"></script>
 {% endblock script %}
