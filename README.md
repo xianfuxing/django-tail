@@ -24,5 +24,5 @@ django-tail
 </pre>
 
 ## To be continue...
-1. 增加search功能，待续...
+1. ~~增加search功能，待续...~~ (done)
 2. 增加click log line选中
