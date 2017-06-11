@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,7 +23,7 @@
                 </span>
                 <form class="navbar-form navbar-right" role="search" onkeypress="return event.keyCode != 13;">
                     <div class="form-group">
-                        <input type="text" class="form-control query" placeholder="Filter" tabindex="1">
+                        <input type="text" id="search" class="form-control query" placeholder="Filter" tabindex="1">
                     </div>
                 </form>
             </div>
@@ -32,7 +33,7 @@
     {% block content %}
     {% endblock content %}
     </div>
-    <pre class="log"></pre>
+    <pre id="log" class="log"></pre>
 
     <script src="//cdn.bootcss.com/tinycon/0.6.5/tinycon.min.js"></script>
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
