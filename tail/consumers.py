@@ -25,7 +25,7 @@ def ws_connect(message):
     Group('logs'+log_id).add(message.reply_channel)
 
     for i in range(0, 10):
-        line = popen.stdout.readline().strip()
+        line = popen.stdout.readline()
         Group('logs'+log_id).send({
                     'text': json.dumps({
                     'line': line.decode('utf-8'),
