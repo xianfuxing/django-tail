@@ -3,6 +3,9 @@ django-tail
 
 利用django + channels 实现Liux tail -f 功能
 
+## python requirement
+python 2.7+ / 3.4+ is recommended
+
 ## 功能
 用户登录后，可以查看在线日志。
 
