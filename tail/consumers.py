@@ -21,7 +21,7 @@ def ws_connect(message):
     log_id = log_id.replace('!', '1')
     _groups.append(log_id)
 
-    LOGTAIL_FILE = getattr(settings, 'LOGTAIL_FILE', {})
+    LOGTAIL_FILE = getattr(settings, 'LOGTAIL_FILE', '')
     cmd = 'tail -f {0}'.format(LOGTAIL_FILE)
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     Group('logs'+log_id).add(message.reply_channel)

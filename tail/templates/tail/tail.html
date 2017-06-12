@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block title %}
-tail -F /var/log/nginx/access.log
+tail -F {{ logtail_file }}
 {% endblock title %}
 {% block content %}
 {% endblock content%}

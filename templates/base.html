@@ -13,7 +13,7 @@
     <header class="navbar-static-top bs-docs-nav" id="top" role="banner">
         <nav class="topbar navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container-fluid">
-                <span class="navbar-brand" href="#">tail -F /var/log/nginx/access.log</span>
+                <span class="navbar-brand" href="#">tail -F {{ logtail_file }}</span>
                 <span class="user navbar-right">
                     {% if request.user.is_authenticated %}
                         <a href="{% url "logout" %}"><i class="fa fa-sign-out" aria-hidden="true"></i> 登出</a>
