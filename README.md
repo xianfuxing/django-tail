@@ -18,13 +18,17 @@ python 2.7+ / 3.4+ is recommended
 <code>pip install asgi-redis==1.4.0</code>
 </pre>
 
-## 运行
+## getting started
 <pre>
 <code>python manage.py makemigrations accounts</code>
 <code>python manage.py migrate</code>
 <code>python manage.py createsuperuser</code>
 <code>python manage.py runserver</code>
 </pre>
+
+## settings
+Edit settings.py
+<code>LOGTAIL_FILE = '/var/log/nginx/access.log'</code>
 
 ## To be continue...
 1. ~~增加search功能，待续...~~ (done)
