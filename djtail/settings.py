@@ -137,3 +137,6 @@ CHANNEL_LAYERS = {
         'ROUTING': 'djtail.routing.channel_routing',
     }
 }
+
+
+LOGTAIL_FILE = '/var/log/nginx/access.log'

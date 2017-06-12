@@ -3,6 +3,7 @@ import time
 import subprocess
 import threading
 from .utils import stop_thread
+from django.conf import settings
 from channels import Group
 from channels.auth import channel_session_user, channel_session_user_from_http
 
@@ -20,7 +21,8 @@ def ws_connect(message):
     log_id = log_id.replace('!', '1')
     _groups.append(log_id)
 
-    cmd = 'tail -f /var/log/nginx/access.log'
+    LOGTAIL_FILE = getattr(settings, 'LOGTAIL_FILE', {})
+    cmd = 'tail -f {0}'.format(LOGTAIL_FILE)
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     Group('logs'+log_id).add(message.reply_channel)
 
