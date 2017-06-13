@@ -18,7 +18,7 @@ python 2.7+ / 3.4+ is recommended
 <code>pip install asgi-redis==1.4.0</code>
 </pre>
 
-## getting started
+## Getting Started
 <pre>
 <code>python manage.py makemigrations accounts</code>
 <code>python manage.py migrate</code>
@@ -26,8 +26,9 @@ python 2.7+ / 3.4+ is recommended
 <code>python manage.py runserver</code>
 </pre>
 
-## settings
+## Settings
 Edit settings.py
+
 <code>LOGTAIL_FILE = '/var/log/nginx/access.log'</code>
 
 ## To be continue...
