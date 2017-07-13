@@ -37,7 +37,7 @@ def ws_connect(message):
 
     def tail():
         while True:
-            line = popen.stdout.readline().strip()
+            line = popen.stdout.readline()
             if line:
                 for log_id in _groups:
                     Group('logs'+log_id).send({
