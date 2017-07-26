@@ -31,6 +31,17 @@ Edit settings.py
 
 <code>LOGTAIL_FILE = '/var/log/nginx/access.log'</code>
 
+## Multi Logs Beta
+多日志支持（测试版）
+
+branch: multi-log 
+
+<code>LOGTAIL_FILES = [
+  '/var/log/nginx/access.log',
+  '/var/log/messages',
+]</code>
+
 ## To be continue...
 1. ~~增加search功能，待续...~~ (done)
 2. 增加click log line选中
+3. ~~多日志支持~~ (done)
