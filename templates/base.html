@@ -10,34 +10,54 @@
     <link rel="icon" href="/static/images/favicon.ico">
 </head>
 <body>
-    <header class="navbar-static-top bs-docs-nav" id="top" role="banner">
-        <nav class="topbar navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container-fluid">
-                <span class="navbar-brand" href="#">tail -F {{ logtail_file }}</span>
-                <span class="user navbar-right">
-                    {% if request.user.is_authenticated %}
-                        <a href="{% url "logout" %}"><i class="fa fa-sign-out" aria-hidden="true"></i> 登出</a>
-                    {% else %}
-                        <a href="{% url "login" %}"><i class="fa fa-sign-in" aria-hidden="true"></i> 登录</a>
-                    {% endif %}
-                </span>
-                <form class="navbar-form navbar-right" role="search" onkeypress="return event.keyCode != 13;">
-                    <div class="form-group">
-                        <input type="text" id="search" class="form-control query" placeholder="Filter" tabindex="1">
-                    </div>
-                </form>
-            </div>
-        </nav>
+   <header class="navbar navbar-static-top bs-docs-nav" id="top" role="banner">
+      <nav class="navbar navbar-inverse" role="navigation">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="  #navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand">tail -F /path/to/log</span>
+          </div><!--/.navbar-header -->
+          <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li><a href="{% url 'tail:tail' %}">tail -F</a></li>
+              <li><a href="#">Exception</a></li>
+            </ul>
+            <span class="user navbar-right">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url "logout" %}"><i class="fa fa-sign-out" aria-hidden="true"></i> 登出</a>
+                {% else %}
+                    <a href="{% url "login" %}"><i class="fa fa-sign-in" aria-hidden="true"></i> 登录</a>
+                {% endif %}
+            </span>
+            <form class="navbar-form navbar-right" role="search" onkeypress="return event.keyCode != 13;">
+                <div class="form-group">
+                    <input type="text" id="search" class="form-control query" placeholder="Filter" tabindex="1">
+                </div>
+            </form>
+          </div><!--/.nav-collapse -->
+      </nav>
+      {% block nav-tabs %}
+      {% endblock nav-tabs %}
     </header>
     <div class="container">
     {% block content %}
     {% endblock content %}
     </div>
-    <pre id="log" class="log"></pre>
+
+    <div class="container-fluid">
+    {% block fluid %}
+    {% endblock fluid %}
+    </div>
+    <!--<pre id="log" class="log"></pre>-->
 
     <script src="//cdn.bootcss.com/tinycon/0.6.5/tinycon.min.js"></script>
     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
     <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
     {% block script %}
     {% endblock script %}
 </body>

@@ -1,3 +1,5 @@
+# coding: utf-8
+import os
 import json
 import time
 import subprocess
@@ -21,41 +23,53 @@ def ws_connect(message):
     log_id = log_id.replace('!', '1')
     _groups.append(log_id)
 
-    LOGTAIL_FILE = getattr(settings, 'LOGTAIL_FILE', '')
-    cmd = 'tail -f {0}'.format(LOGTAIL_FILE)
-    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    # Multi logs
+    popens = {}
+    LOGTAIL_FILES = getattr(settings, 'LOGTAIL_FILES', [])
+    for log in LOGTAIL_FILES:
+        tail_cmd = 'tail -f {0}'.format(log)
+        tail_popen = subprocess.Popen(tail_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        popens[log] = tail_popen
+    # Add message channel
     Group('logs'+log_id).add(message.reply_channel)
 
-    for i in range(0, 10):
-        line = popen.stdout.readline()
-        Group('logs'+log_id).send({
-                    'text': json.dumps({
-                    'line': line.decode('utf-8'),
-                    'is_logged_in': True
-                })
-            })
+    # pre read
+    pre_read(log_id, popens, 10)
 
-    def tail():
-        while True:
-            line = popen.stdout.readline()
-            if line:
-                for log_id in _groups:
-                    Group('logs'+log_id).send({
-                    'text': json.dumps({
-                    'line': line.decode('utf-8'),
-                    'is_logged_in': True
-                })
-            })
+    # Thread target
+    # 采用工厂函数方式，如果没有make_tail，将会导致
+    # 所有的多线程都采用for最后loop的结果。
+    targets = {}
+    for log in popens:
+        def make_tail(log):
+            def tail():
+                while True:
+                    line = popens[log].stdout.readline()
+                    log_name = log.rsplit('/', 1)[-1].split('.')[0]
+                    #print(log_name)
+                    for log_id in _groups:
+                        Group('logs'+log_id).send({
+                        'text': json.dumps({log_name: line.decode('utf-8')})
+                    })
+            return tail
+        targets[log] = make_tail(log)
     global tailThread
+    print(targets)
     
     if _threads == []:
         print('create thread')
-        tailThread = threading.Thread(name='tail', target=tail)
-        tailThread.start()
-        _threads.append(tailThread)
+        for log in popens:
+            tailThread = threading.Thread(name='log_tail', target=targets[log])
+            tailThread.start()
+            _threads.append(tailThread)
     else:
-        Group('logs'+log_id).send({'text': json.dumps({'line': ''})})
+        text_json = {}
+        for log in popens:
+            log_name = log.rsplit('/', 1)[-1].split('.')[0]
+            text_json[log_name] = ''
+        Group('logs'+log_id).send({'text': json.dumps(text_json)})
     print(_groups)
+    print(_threads)
 
 @channel_session_user
 def ws_disconnect(message):
@@ -64,7 +78,6 @@ def ws_disconnect(message):
     log_id = log_id.replace('!', '1')
     Group('logs'+log_id).send({
         'text': json.dumps({
-            #'line': '',
             'is_logged_in': False
         })
     })
@@ -73,3 +86,18 @@ def ws_disconnect(message):
 
     #stop_thread(tailThread)
     _groups.remove(log_id)
+
+# 预读日志文件，默认tail预读10行，
+# count 可以指定预读行数，少于count
+# 则预读所有
+def pre_read(log_id, popens, count):
+    for i in range(0, count):
+        text_json = {}
+        for log in popens:
+            line = popens[log].stdout.readline()
+            log_name = log.rsplit('/', 1)[-1].split('.')[0]
+            text_json[log_name] = line.decode('utf-8')
+
+        Group('logs'+log_id).send({
+                        'text': json.dumps(text_json)
+        })

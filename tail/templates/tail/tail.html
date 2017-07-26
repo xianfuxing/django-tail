@@ -2,10 +2,32 @@
 {% load staticfiles %}
 
 {% block title %}
-tail -F {{ logtail_file }}
+tail -F
 {% endblock title %}
-{% block content %}
-{% endblock content%}
+
+{% block fluid %}
+<div class="row-fluid">
+  <div class="tabbable tabs-left">
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        {% for log_name in log_list %}
+        <li role="presentation" class="{%if forloop.counter == 1 %}active{% endif %}">
+          <a href="#{{ log_name }}" aria-controls="{{ log_name }}" role="tab" data-toggle="tab">{{ log_name }}</a></li>
+        {% endfor %}
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        {% for log_name in log_list %}
+        <div role="tabpanel" class="{%if forloop.counter == 1 %}tab-pane active{% else %}tab-pane{% endif %}" id="{{ log_name }}">
+            <pre id="logs_{{ log_name }}" class="{{ log_name }}"></pre>
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+</div>
+
+{% endblock fluid %}
 
 {% block script %}
   <script>
@@ -36,13 +58,18 @@ tail -F {{ logtail_file }}
 
     socket.onmessage = function message(event) {
       var data = JSON.parse(event.data);
-      var line = data['line'];
       var wasScrolledBottom = _isScrolledBottom();
-      if (line != '') {
-          $(".log").append('<div class="line">'+'<p class="inner-line">'+line+'</p>'+'</div>').fadeIn();
-      }
-      // Search 
-      self.logChildNodes = document.getElementById("log").childNodes;
+ 
+      self.logChildNodes = [];
+      {% for log_name in log_list %}
+        var line = data['{{ log_name }}'];
+        if (line !== undefined && line != '') {
+        //if (line != '') {
+            $(".{{ log_name }}").append('<div class="line">'+'<p class="inner-line">'+line+'</p>'+'</div>').fadeIn();
+        }
+        // search
+        self.logChildNodes = self.logChildNodes.concat(document.getElementById("logs_{{ log_name }}").childNodes);
+      {% endfor %}
 
       // unread
       if (_newLinesCount < 99 && ! _isWindowFocused) {

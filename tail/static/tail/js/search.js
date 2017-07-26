@@ -21,8 +21,12 @@ _searchInput.onkeyup = function(e) {
     }
     _logChildNodes = self.logChildNodes;
     for (i=0; i<_logChildNodes.length; i++) {
-        _filterElement(_logChildNodes[i])
-        // console.log(_logChildNodes[i]);
+        NodeList = _logChildNodes[i];
+        console.log(NodeList);
+        for (j=0; j<NodeList.length; j++) {
+            _filterElement(NodeList[j])
+            console.log(NodeList[j]);
+        };
     };
     window.scrollTo(0, document.body.scrollHeight);
 }

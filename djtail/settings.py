@@ -80,6 +80,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+
     }
 }
 
@@ -110,7 +111,7 @@ LOGIN_REDIRECT_URL = reverse_lazy('tail:tail')
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -139,4 +140,11 @@ CHANNEL_LAYERS = {
 }
 
 
-LOGTAIL_FILE = '/var/log/nginx/access.log'
+LOGTAIL_FILES = [
+    '/var/log/nginx/access.log',
+    '/var/log/messages',
+]
+
+# Celery broker
+BROKER_URL = 'redis://127.0.0.1:6379/0'
+BROKER_TRANSPORT = 'redis'
