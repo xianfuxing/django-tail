@@ -91,13 +91,23 @@ def ws_disconnect(message):
 # count 可以指定预读行数，少于count
 # 则预读所有
 def pre_read(log_id, popens, count):
-    for i in range(0, count):
-        text_json = {}
-        for log in popens:
+    for log in popens:
+        log_len = file_len(log)
+        if log_len < count:
+            count = log_len
+        for i in range(0, count):
             line = popens[log].stdout.readline()
             log_name = log.rsplit('/', 1)[-1].split('.')[0]
-            text_json[log_name] = line.decode('utf-8')
-
-        Group('logs'+log_id).send({
-                        'text': json.dumps(text_json)
+            # Send pre-reading
+            Group('logs'+log_id).send({
+                'text': json.dumps({log_name: line.decode('utf-8')})
         })
+
+
+# count file lines
+def file_len(fname):
+    lines = 0
+    with open(fname) as f:
+        for i, l in enumerate(f):
+            lines += 1
+    return lines
