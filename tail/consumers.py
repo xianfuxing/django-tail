@@ -92,7 +92,10 @@ def ws_disconnect(message):
 # 则预读所有
 def pre_read(log_id, popens, count):
     for log in popens:
-        log_len = file_len(log)
+        try:
+            log_len = file_len(log)
+        except IOError:
+            continue
         if log_len < count:
             count = log_len
         for i in range(0, count):
