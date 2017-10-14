@@ -4,14 +4,20 @@
 
 {% block content %}
   <h1>登录</h1>
-  {% if form.errors %}
-    <p>
-      Your username and password didn't match. 
-      Please try again.
-    </p>
-  {% else %}
-    <p>Please, use the following form to log-in. If you don't have an account <a href="">register here</a></p>
-  {% endif %}
+  <div class="row">
+    <div class="col-md-4">
+    {% if form.errors %}
+      {% for error in form.non_field_errors %}
+          <div class="alert alert-danger error-msg">
+              <i class="fa fa-times" aria-hidden="true"></i>
+              <span>{{ error|escape }}</span>
+          </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info">Please, use the following form to log-in. If you don't have an account <strong><a href="">register here</a></strong></div>
+    {% endif %}
+    </div>
+  </div>
   <div class="login-form">
     <form action="{% url 'login' %}" method="post">
       {% csrf_token %}
@@ -20,12 +26,10 @@
             <div class="form-group">
               <label for="{{ form.username.id_for_label }}">Username:</label>
               {{ form.username }}
-              {{ form.username.errors }}
             </div>
             <div class="form-group">
               <label for="{{ form.username.id_for_label }}">Password:</label>
               {{ form.password }}
-              {{ form.password.errors }}
             </div>
          </div>
       </div>
@@ -33,4 +37,67 @@
       <button class="btn btn-primary btn-sm" type="submit">登录</button>
     </form>
   </div>
-{% endblock %}
+{% endblock content %}
+
+{% block script %}
+  <script>
+  $(document).ready(function(){
+     $('form').on('submit', function(e) { e.preventDefault()
+       $.ajax({
+         type:"POST",
+         url: '/accounts/login/',
+         data: $('form').serialize(),
+         //data: {username: username, password: password},
+         success: function(data) {
+            if(data.success) {
+                window.location.href="{% url 'tail:tail' %}";
+            } else {
+                if ($(".alert").hasClass("shake")) {
+                    $(".alert").effect("shake");
+                    return false;
+                } 
+                $(".alert").fadeOut("400", function(){
+                    var alert = $('<div class="alert alert-danger error-msg">'+
+                                 '<i class="fa fa-times" aria-hidden="true"></i>'+
+                                 '<span>'+data.msg+'</span>'+'</div>').hide();
+                    $(this).replaceWith(alert);
+                    $(".alert").addClass("shake").fadeIn("300");
+                });
+            }   
+        }
+     });
+   });
+ });
+  </script>
+  <script>
+    function getCookie(name) {  
+      var cookieValue = null;  
+      if (document.cookie && document.cookie != '') {  
+          var cookies = document.cookie.split(';');  
+          for (var i = 0; i < cookies.length; i++) {  
+              var cookie = jQuery.trim(cookies[i]);  
+              // Does this cookie string begin with the name we want?  
+              if (cookie.substring(0, name.length + 1) == (name + '=')) {  
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));  
+                  break;  
+              }  
+          }  
+      }  
+      return cookieValue;  
+    }  
+      
+    function csrfSafeMethod(method) {  
+        // these HTTP methods do not require CSRF protection  
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));  
+    }  
+    $.ajaxSetup({  
+        beforeSend: function(xhr, settings) {  
+        var csrftoken = getCookie('csrftoken');       
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {  
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);  
+            }  
+        }  
+    }); 
+  </script> 
+  <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% endblock script %}
