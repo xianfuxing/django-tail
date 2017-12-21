@@ -107,10 +107,17 @@ def pre_read(log_id, popens, count):
         })
 
 
-# count file lines
+# count file lines using buf count
+# 性能上是 wc -l 的一半
 def file_len(fname):
+    f = open(fname)                  
     lines = 0
-    with open(fname) as f:
-        for i, l in enumerate(f):
-            lines += 1
+    buf_size = 1024 * 1024
+    read_f = f.read # loop optimization
+
+    buf = read_f(buf_size)
+    while buf:
+        lines += buf.count('\n')
+        buf = read_f(buf_size)
+
     return lines
