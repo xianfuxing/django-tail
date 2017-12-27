@@ -92,11 +92,14 @@ tail -F
 
   </script>
   <script>
-    // $(document).ready(function() {
-    //   $("#LogTab a").click(function() {
-    //       window.scrollTo(0, document.body.scrollHeight);
-    //   });
-    // });
+    $(document).ready(function() {
+       $('#LogTab a').on('shown.bs.tab', function (e) {
+        //e.target // newly activated tab
+        //e.relatedTarget // previous active tab
+        window.scrollTo(0, document.body.scrollHeight);
+      })
+
+    });
 
   </script>
   <script src="{% static 'tail/js/search.js' %}"></script>
