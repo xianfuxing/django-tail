@@ -9,7 +9,7 @@ tail -F
 <div class="row-fluid">
   <div class="tabbable tabs-left">
       <!-- Nav tabs -->
-      <ul class="nav nav-tabs" role="tablist">
+      <ul id="LogTab" class="nav nav-tabs" role="tablist">
         {% for log_name in log_list %}
         <li role="presentation" class="{%if forloop.counter == 1 %}active{% endif %}">
           <a href="#{{ log_name }}" aria-controls="{{ log_name }}" role="tab" data-toggle="tab">{{ log_name }}</a></li>
@@ -66,6 +66,10 @@ tail -F
         if (line !== undefined && line != '') {
         //if (line != '') {
             $(".{{ log_name }}").append('<div class="line">'+'<p class="inner-line">'+line+'</p>'+'</div>').fadeIn();
+            var log_count = $(".{{ log_name }}").children().length;
+            if (log_count > {{ lines_displayed }} ) {
+                $(".{{ log_name }}").find('div:lt(1)').remove();
+            }
         }
         // search
         self.logChildNodes = self.logChildNodes.concat(document.getElementById("logs_{{ log_name }}").childNodes);
@@ -85,6 +89,14 @@ tail -F
     if (socket.readyState == WebSocket.OPEN) {
       socket.onopen();
     }
+
+  </script>
+  <script>
+    // $(document).ready(function() {
+    //   $("#LogTab a").click(function() {
+    //       window.scrollTo(0, document.body.scrollHeight);
+    //   });
+    // });
 
   </script>
   <script src="{% static 'tail/js/search.js' %}"></script>

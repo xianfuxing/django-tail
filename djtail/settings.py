@@ -145,6 +145,8 @@ LOGTAIL_FILES = [
     '/var/log/messages',
 ]
 
+LOGTAIL_LINES_DISPLAYED = 300
+
 # Celery broker
 BROKER_URL = 'redis://127.0.0.1:6379/0'
 BROKER_TRANSPORT = 'redis'
