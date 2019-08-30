@@ -1,7 +1,7 @@
 django-tail
 ===========
 
-利用django + channels 实现Liux tail -f 功能
+利用django + channels 实现Linux tail -f 功能
 
 ## python requirement
 python 2.7+ / 3.4+ is recommended
